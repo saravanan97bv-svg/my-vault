@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#dc2626">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="My Vault">
+    <meta name="application-name" content="My Vault">
+    <meta name="msapplication-TileColor" content="#dc2626">
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="manifest" href="manifest.json">
+    <!-- Air-gapped Content Security Policy: Strictly zero external network requests allowed -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; connect-src 'self';">
+    <title>My Vault v1.0 — Offline Lifetime Family Chronicle</title>
+    <link rel="stylesheet" href="styles.css?v=2.2">
+    <script>
+        // Ensure default RealBite Red & White Light Theme
+        (function() {
+            var theme = localStorage.getItem('heritage_vault_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+<body data-theme="light">
+
+    <!-- Top Sticky Header -->
+    <header class="app-header">
+        <div class="brand-section">
+            <div class="brand-icon" title="My Vault Lifetime Chronicle">
+                <svg width="24" height="24" viewBox="0 0 512 512" fill="none">
+                    <path d="M256 60 L410 120 C410 280 340 390 256 440 C172 390 102 280 102 120 Z" fill="#ffffff" />
+                    <path d="M256 95 L380 145 C380 265 325 360 256 400 C187 360 132 265 132 145 Z" fill="#b91c1c" />
+                    <path d="M256 360 L256 250" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M256 300 C210 290 170 260 160 220 M256 300 C302 290 342 260 352 220" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+                    <circle cx="160" cy="220" r="10" fill="#fbbf24"/>
+                    <circle cx="352" cy="220" r="10" fill="#fbbf24"/>
+                    <circle cx="256" cy="140" r="12" fill="#fbbf24"/>
+                    <circle cx="256" cy="250" r="26" fill="#fbbf24"/>
+                    <circle cx="256" cy="250" r="18" fill="#1c0a0f"/>
+                    <circle cx="256" cy="245" r="5" fill="#fbbf24"/>
+                    <rect x="254" y="247" width="4" height="9" fill="#fbbf24"/>
+                </svg>
+            </div>
+            <div>
+                <div class="brand-title">
+                    My Vault
+                    <span class="brand-tag">v1.0</span>
+                    <span class="brand-tag">Air-Gapped</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unified Cross-App Global Search -->
+        <div class="search-header-container">
+            <div class="search-input-wrapper">
+                <span>🔍</span>
+                <input type="text" id="globalSearchInput" class="search-input-field" placeholder="Search Aadhaar, Grandparents, Doctor, Dates..." autocomplete="off">
+                <button id="btnClearSearch" style="border: none; background: transparent; color: var(--text-muted); cursor: pointer; display: none;">✕</button>
+            </div>
+            <!-- Live Typeahead Suggestions Dropdown -->
+            <div id="globalSearchTypeahead" class="search-typeahead-dropdown" style="display: none;"></div>
+        </div>
+
+        <div class="header-actions">
+            <!-- Privacy Peek Toggle -->
+            <button id="btnPrivacyPeek" class="btn-icon" title="Toggle Privacy Mask for Private Notes" aria-label="Toggle Privacy Mask">
+                👁️
+            </button>
+
+            <!-- Theme Toggle -->
+            <button id="btnThemeToggle" class="btn-icon" title="Switch Light / Dark Theme" aria-label="Toggle Theme">
+                🌓
+            </button>
+
+            <!-- PWA Install Prompt Button -->
+            <button id="btnInstallPwa" class="btn btn-secondary btn-sm" style="display: none; align-items: center; gap: 4px; padding: 0.35rem 0.65rem; border-color: var(--accent); color: var(--accent);" title="Install My Vault as Standalone App">
+                📲 Install App
+            </button>
+
+            <!-- Active User Profile Pill -->
+            <div id="currentUserBadge" class="user-badge" title="Click to Switch User / Lock Session">
+                <span id="headerUserIcon">👤</span>
+                <span id="headerUserName">Admin</span>
+                <span id="headerUserRole" class="role-pill role-admin">Admin</span>
+            </div>
+
+            <!-- Quick Lock Session Button -->
+            <button id="btnLockSession" class="btn-icon" title="Lock Vault Immediately" aria-label="Lock Session">
+                🔒
+            </button>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="app-nav">
+        <button class="nav-tab active" data-tab="tab-dashboard" id="navTabDashboard">
+            📊 Executive Dashboard
+        </button>
+        <button class="nav-tab" data-tab="tab-vault" id="navTabVault">
+            📁 Document Vault
+        </button>
+        <button class="nav-tab" data-tab="tab-medical" id="navTabMedical">
+            🩺 Health & Medical
+        </button>
+        <button class="nav-tab" data-tab="tab-growth" id="navTabGrowth">
+            🌱 Growth Timelapse
+        </button>
+        <button class="nav-tab" data-tab="tab-houselogs" id="navTabHouseLogs">
+            📦 House Logs Locker
+        </button>
+        <button class="nav-tab" data-tab="tab-settings" id="navTabSettings">
+            ⚙️ Settings & Access
+        </button>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="app-container">
+
+        <!-- ==========================================
+             1. EXECUTIVE DASHBOARD & LIFE STREAM
+             ========================================== -->
+        <section id="tab-dashboard" class="view-section active">
+            <!-- Sleek Hero Overview Banner -->
+            <div class="hero-banner">
+                <div class="hero-info">
+                    <div class="hero-icon-box">🏛️</div>
+                    <div>
+                        <div class="hero-title">
+                            Lifetime Family Chronicle
+                            <span class="brand-tag">AES-256 Air-Gapped</span>
+                        </div>
+                        <div class="hero-sub">
+                            Encrypted offline registry • Documents, Milestones, Medical Timelines & Growth Portraits
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="quick-action-pill" onclick="window.openAddEventForDate()">
+                        ➕ Log Milestone
+                    </button>
+                    <button class="quick-action-pill" onclick="document.getElementById('navTabVault').click(); document.getElementById('btnOpenAddDoc').click();">
+                        📄 Upload Doc
+                    </button>
+                    <button class="quick-action-pill" onclick="document.getElementById('navTabMedical').click(); document.getElementById('btnOpenAddMedical').click();">
+                        🩺 Health Visit
+                    </button>
+                    <button class="quick-action-pill" onclick="document.getElementById('navTabGrowth').click(); document.getElementById('btnOpenAddGrowth').click();">
+                        🌱 Growth Photo
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPI Summary Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>TOTAL DOCUMENTS</span>
+                        <span>📄</span>
+                    </div>
+                    <div class="kpi-value" id="kpiDocCount">0</div>
+                    <div class="kpi-subtext" id="kpiDocSize">0 B Stored Securely</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>LIFE MILESTONES</span>
+                        <span>🌟</span>
+                    </div>
+                    <div class="kpi-value" id="kpiEventsCount">0</div>
+                    <div class="kpi-subtext">Events & Diary Entries</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>NEXT EXPIRY COUNTDOWN</span>
+                        <span>⏳</span>
+                    </div>
+                    <div class="kpi-value" id="kpiNextExpiry" style="font-size: 1.25rem; color: var(--accent-amber);">None</div>
+                    <div class="kpi-subtext" id="kpiNextExpiryName">Rent / Insurance / ITR</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>VAULT STORAGE METRICS</span>
+                        <span>💾</span>
+                    </div>
+                    <div class="kpi-value" id="kpiTotalStorage">0 MB</div>
+                    <div class="kpi-subtext">100% Local IndexedDB</div>
+                </div>
+            </div>
+
+            <!-- Two-Column Executive Layout -->
+            <div class="dashboard-grid">
+                <!-- Left: Life Events Stream & Diary -->
+                <div>
+                    <div class="section-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <span>📜</span> Chronological Life Stream & Milestones
+                            </div>
+                            <button id="btnOpenAddEvent" class="btn btn-primary btn-sm">
+                                ➕ Log Event / Diary
+                            </button>
+                        </div>
+
+                        <!-- Filter Chips -->
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; overflow-x: auto; padding-bottom: 4px;">
+                            <button class="btn btn-secondary btn-sm event-filter-btn active" data-filter="all">All</button>
+                            <button class="btn btn-secondary btn-sm event-filter-btn" data-filter="milestone">🌟 Milestones</button>
+                            <button class="btn btn-secondary btn-sm event-filter-btn" data-filter="health">💉 Health & Vaccines</button>
+                            <button class="btn btn-secondary btn-sm event-filter-btn" data-filter="education">🎓 Education</button>
+                            <button class="btn btn-secondary btn-sm event-filter-btn" data-filter="family">👨‍👩‍👧 Family</button>
+                            <button class="btn btn-secondary btn-sm event-filter-btn" data-filter="diary">📖 Diary</button>
+                        </div>
+
+                        <!-- Active Calendar Filter Bar Container -->
+                        <div id="calendarActiveFilterBar" style="display: none; margin-bottom: 1rem;"></div>
+
+                        <!-- Timeline Nodes -->
+                        <div id="timelineContainer" class="timeline-stream">
+                            <!-- Populated dynamically by app.js -->
+                            <div style="text-align: center; color: var(--text-muted); padding: 2rem 0;">
+                                No life events logged yet. Click "+ Log Event / Diary" above to begin your family chronicle!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive Calendar & Time Capsule -->
+                <div>
+                    <!-- Calendar Widget -->
+                    <div class="section-panel" style="padding: 1rem;">
+                        <div class="calendar-widget">
+                            <div class="calendar-header">
+                                <button id="btnCalPrev" class="btn-icon" style="width: 28px; height: 28px;">◀</button>
+                                <span id="calMonthYearLabel" class="calendar-month-label">October 2026</span>
+                                <button id="btnCalToday" class="btn-cal-today" title="Jump to Today's Date">Today</button>
+                                <button id="btnCalNext" class="btn-icon" style="width: 28px; height: 28px;">▶</button>
+                            </div>
+                            <div class="calendar-grid" id="calendarDayHeaders">
+                                <div class="calendar-day-header">Su</div>
+                                <div class="calendar-day-header">Mo</div>
+                                <div class="calendar-day-header">Tu</div>
+                                <div class="calendar-day-header">We</div>
+                                <div class="calendar-day-header">Th</div>
+                                <div class="calendar-day-header">Fr</div>
+                                <div class="calendar-day-header">Sa</div>
+                            </div>
+                            <div class="calendar-grid" id="calendarDaysGrid" style="margin-top: 6px;">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- "On This Day" Time Capsule Card -->
+                    <div class="section-panel">
+                        <div class="panel-header" style="border: none; padding-bottom: 0; margin-bottom: 0.5rem;">
+                            <div class="panel-title" style="font-size: 0.95rem; color: var(--md-sys-color-primary);">
+                                ⏳ "On This Day" Time Capsule
+                            </div>
+                        </div>
+                        <div id="timeCapsuleContent" style="font-size: 0.82rem; color: var(--text-secondary);">
+                            Scanning your lifetime chronicle for memories on today's date...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             2. DOCUMENT VAULT (HEAVY PDFS & SCANS)
+             ========================================== -->
+        <section id="tab-vault" class="view-section">
+            <div class="panel-header">
+                <div>
+                    <h2 style="font-size: 1.25rem; font-weight: 700;">Document Vault</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">
+                        Heavy multi-page PDFs, rent agreements, tax records, and certificates stored locally with custom folder encryption.
+                    </p>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button id="btnOpenAddFolder" class="btn btn-secondary btn-sm">
+                        📁 New Folder
+                    </button>
+                    <button id="btnOpenAddDoc" class="btn btn-primary btn-sm">
+                        📄 Upload Document
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visual Category Layout Pills for Vault -->
+            <div class="vault-category-bar" id="vaultCategoryBar">
+                <button class="vault-category-pill active" data-cat="all">📂 All Categories</button>
+                <button class="vault-category-pill" data-cat="identity">🪪 Identity & Passports</button>
+                <button class="vault-category-pill" data-cat="property">🏠 Property & Lease</button>
+                <button class="vault-category-pill" data-cat="health">🩺 Health & Vaccines</button>
+                <button class="vault-category-pill" data-cat="education">🎓 Education & Degrees</button>
+                <button class="vault-category-pill" data-cat="legal">⚖️ Legal & Taxes</button>
+            </div>
+
+            <!-- Folder Cards Grid -->
+            <div class="folder-grid" id="folderGridContainer">
+                <!-- Populated dynamically -->
+            </div>
+
+            <!-- Current Folder Header & Active Documents -->
+            <div class="section-panel">
+                <div class="panel-header">
+                    <div class="panel-title" id="activeFolderTitle">
+                        <span>📂</span> All Documents
+                    </div>
+                    <span id="activeFolderCount" style="font-size: 0.8rem; color: var(--text-muted);">0 Files</span>
+                </div>
+
+                <div class="doc-grid" id="documentGridContainer">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             3. HEALTH & MEDICAL HUB (VISUAL TIMELINE & SCHEDULER)
+             ========================================== -->
+        <section id="tab-medical" class="view-section">
+            <div class="panel-header">
+                <div>
+                    <h2 style="font-size: 1.25rem; font-weight: 700;">🩺 Health & Medical Hub</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">
+                        Visual timeline of doctor visits, prescription archives, and custom appointment schedules for grandparents, parents, and children.
+                    </p>
+                </div>
+                <button id="btnOpenAddMedical" class="btn btn-primary btn-sm">
+                    🩺 Record Visit / Schedule Next
+                </button>
+            </div>
+
+            <!-- Health KPI Summary Cards -->
+            <div class="kpi-grid" style="margin-bottom: 1.25rem;">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>LAST MEDICAL VISIT</span>
+                        <span>🩺</span>
+                    </div>
+                    <div class="kpi-value" id="kpiLastMedicalDoctor" style="font-size: 1.15rem; color: var(--accent-emerald);">None Logged</div>
+                    <div class="kpi-subtext" id="kpiLastMedicalDetails">Consultation / Hospital</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>NEXT SCHEDULED CHECKUP</span>
+                        <span>⏳</span>
+                    </div>
+                    <div class="kpi-value" id="kpiNextMedicalCountdown" style="font-size: 1.15rem; color: var(--accent-blue);">None Scheduled</div>
+                    <div class="kpi-subtext" id="kpiNextMedicalDetails">Follow-up / Vaccine</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>MEDICAL RECORDS</span>
+                        <span>💊</span>
+                    </div>
+                    <div class="kpi-value" id="kpiMedicalTotalCount">0</div>
+                    <div class="kpi-subtext">Visits & Prescriptions</div>
+                </div>
+            </div>
+
+            <!-- Family Member Filter Chips -->
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; overflow-x: auto; padding-bottom: 4px;">
+                <button class="btn btn-secondary btn-sm med-filter-btn active" data-member="all">All Family</button>
+                <button class="btn btn-secondary btn-sm med-filter-btn" data-member="Grandfather">👴 Grandfather</button>
+                <button class="btn btn-secondary btn-sm med-filter-btn" data-member="Grandmother">👵 Grandmother</button>
+                <button class="btn btn-secondary btn-sm med-filter-btn" data-member="Father">👨 Father</button>
+                <button class="btn btn-secondary btn-sm med-filter-btn" data-member="Mother">👩 Mother</button>
+                <button class="btn btn-secondary btn-sm med-filter-btn" data-member="Child">👧 Child</button>
+            </div>
+
+            <!-- Visual Medical Timeline Container -->
+            <div class="section-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>📋</span> Visual Medical Stream (Past History & Upcoming Schedules)
+                    </div>
+                    <span id="medicalVisitCountLabel" style="font-size: 0.8rem; color: var(--text-muted);">0 Records</span>
+                </div>
+
+                <div id="medicalTimelineContainer">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             4. CHILDREN'S ANNUAL GROWTH TIMELAPSE
+             ========================================== -->
+        <section id="tab-growth" class="view-section">
+            <div class="panel-header">
+                <div>
+                    <h2 style="font-size: 1.25rem; font-weight: 700;">Children's Annual Growth Timelapse</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">
+                        "Watch Her Grow" — yearly birthday portraits, height/weight tracking, and age comparison slider.
+                    </p>
+                </div>
+                <button id="btnOpenAddGrowth" class="btn btn-primary btn-sm">
+                    📸 Add Birthday Portrait
+                </button>
+            </div>
+
+            <!-- Growth Comparison Tool -->
+            <div class="compare-container">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+                    <div style="font-weight: 700; font-size: 0.95rem;">
+                        🔍 Side-by-Side Age Comparison Slider
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+                        <label>Left: <select id="compareLeftAge" class="form-select" style="width: auto; padding: 2px 8px;"></select></label>
+                        <span>vs</span>
+                        <label>Right: <select id="compareRightAge" class="form-select" style="width: auto; padding: 2px 8px;"></select></label>
+                    </div>
+                </div>
+
+                <div class="compare-viewport" id="compareViewport">
+                    <div id="compareLayerRight" class="compare-layer" style="background-image: none;"></div>
+                    <div id="compareLayerLeft" class="compare-layer compare-layer-overlay" style="background-image: none;"></div>
+                </div>
+                <input type="range" id="compareSlider" class="compare-slider-input" min="0" max="100" value="50">
+            </div>
+
+            <!-- Annual Birthday Photo Gallery -->
+            <div class="growth-gallery" id="growthGalleryContainer">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+             4. HOUSE LOGS SAFE LOCKER (DISASTER RECOVERY)
+             ========================================== -->
+        <section id="tab-houselogs" class="view-section">
+            <div class="panel-header">
+                <div>
+                    <h2 style="font-size: 1.25rem; font-weight: 700;">House Logs Safe Deposit Locker</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">
+                        Air-gapped disaster recovery compartment. Store, catalog, and preserve your offline House Logs backup archives (`.hlbackup`, `.json`, `.mmbak`).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Drag & Drop Importer -->
+            <div class="hl-dropzone" id="hlDropzone">
+                <div class="hl-dropzone-icon">📦</div>
+                <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.25rem;">
+                    Deposit House Logs Backup File
+                </div>
+                <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Click or drag & drop `.hlbackup`, `.json`, or `.mmbak` archives here
+                </div>
+                <input type="file" id="hlFileInput" accept=".hlbackup,.json,.mmbak" style="display: none;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('hlFileInput').click();">
+                    Select Backup File from Device
+                </button>
+            </div>
+
+            <!-- Stored Backups Catalog -->
+            <div class="section-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>🗄️</span> Archived Backups in Safe Locker
+                    </div>
+                    <span id="hlBackupsCount" style="font-size: 0.8rem; color: var(--text-muted);">0 Backups</span>
+                </div>
+
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Backup Archive</th>
+                            <th>Imported On</th>
+                            <th>Records / Size</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hlBackupsTableBody">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                                No House Logs backups deposited yet. Keep a safe offline copy here for disaster recovery!
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             5. SETTINGS & PC-STYLE ACCESS CONTROL
+             ========================================== -->
+        <section id="tab-settings" class="view-section">
+            <div class="panel-header">
+                <div>
+                    <h2 style="font-size: 1.25rem; font-weight: 700;">Settings & Access Control</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">
+                        PC-style Administrator powers, User management, Equal Rights delegation, storage metrics, and Master Encrypted Backups.
+                    </p>
+                </div>
+            </div>
+
+            <!-- PC-Style User Management Card (Admin Only) -->
+            <div class="section-panel" id="adminUserManagementPanel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>👥</span> Family User Profiles & Role Delegation (PC Model)
+                    </div>
+                    <button id="btnOpenAddUser" class="btn btn-primary btn-sm">
+                        ➕ Add User Profile
+                    </button>
+                </div>
+
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+                    Administrator can grant <strong>Equal Rights (Co-Admin)</strong> or assign <strong>Standard Family Contributor</strong> and <strong>Restricted Viewer</strong> roles.
+                </p>
+
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>User ID / Name</th>
+                            <th>Role</th>
+                            <th>Permissions Summary</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Auto-Lock & Session Security -->
+            <div class="section-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>🔐</span> Security & Auto-Lock
+                    </div>
+                </div>
+
+                <div class="form-group" style="max-width: 320px;">
+                    <label class="form-label">Auto-Lock Inactivity Timeout</label>
+                    <select id="settingAutoLock" class="form-select">
+                        <option value="1">1 Minute of Inactivity</option>
+                        <option value="5" selected>5 Minutes of Inactivity</option>
+                        <option value="15">15 Minutes of Inactivity</option>
+                        <option value="0">Never Auto-Lock (Manual Only)</option>
+                    </select>
+                </div>
+
+                <div style="margin-top: 1rem;">
+                    <button id="btnOpenChangePin" class="btn btn-secondary btn-sm">
+                        🔑 Change My Login PIN
+                    </button>
+                </div>
+            </div>
+
+            <!-- Storage Metrics Breakdown -->
+            <div class="section-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>📊</span> Local Storage Footprint (IndexedDB)
+                    </div>
+                </div>
+
+                <div class="storage-bar-wrapper">
+                    <div id="storageBarDocs" class="storage-bar-docs" style="width: 0%;" title="Documents"></div>
+                    <div id="storageBarGrowth" class="storage-bar-growth" style="width: 0%;" title="Growth Photos"></div>
+                    <div id="storageBarHL" class="storage-bar-hl" style="width: 0%;" title="House Logs Backups"></div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <div><span style="color: var(--md-sys-color-primary);">■</span> Documents: <strong id="metricDocSize">0 B</strong></div>
+                    <div><span style="color: var(--md-sys-color-secondary);">■</span> Growth Photos: <strong id="metricGrowthSize">0 B</strong></div>
+                    <div><span style="color: var(--md-sys-color-tertiary);">■</span> House Logs Locker: <strong id="metricHLSize">0 B</strong></div>
+                    <div>Total Vault: <strong id="metricTotalSize">0 B</strong></div>
+                </div>
+            </div>
+
+            <!-- Unique Vault Cluster ID & Anti-Tamper Cross-APK Security -->
+            <div class="section-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>🛡️</span> Unique Vault Cluster ID (Anti-Tamper Cross-APK Lock)
+                    </div>
+                </div>
+
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                    Every My Vault instance has a cryptographically unique Vault ID. Backups generated by this APK can <strong>only be restored</strong> on an APK registered with this exact Vault ID.
+                </p>
+
+                <div class="cluster-id-box">
+                    <span id="displayVaultClusterId">HV-XXXX-XXXX-XXXX-XXXX</span>
+                    <button id="btnCopyClusterId" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;">📋 Copy ID</button>
+                </div>
+
+                <div style="font-size: 0.75rem; color: var(--accent-emerald); display: flex; align-items: center; gap: 4px;">
+                    <span>🔒</span> Strict Protection: Cross-APK restoration between mismatched IDs is blocked to prevent accidental or malicious data contamination.
+                </div>
+            </div>
+
+            <!-- Master Encrypted Backup (.vault) -->
+            <div class="section-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>🛡️</span> Master Encrypted Backup & Restore (.vault)
+                    </div>
+                </div>
+
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Exports an end-to-end encrypted `.vault` archive (AES-256-GCM) containing all IndexedDB documents, growth photos, events, and safe locker files.
+                </p>
+
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <button id="btnExportVault" class="btn btn-primary btn-sm">
+                        📥 Export Encrypted .vault Archive
+                    </button>
+                    <input type="file" id="importVaultFileInput" accept=".vault" style="display: none;">
+                    <button id="btnImportVault" class="btn btn-secondary btn-sm">
+                        📤 Restore from .vault Archive
+                    </button>
+                </div>
+                <div style="margin-top: 0.85rem; padding: 0.6rem 0.85rem; background: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🕐</span>
+                    <span>Last backup: <strong id="lastBackupDisplay" style="color: var(--text-primary);">Never</strong></span>
+                </div>
+            </div>
+
+            <!-- Danger Zone (Factory Reset) -->
+            <div class="section-panel" style="border-color: rgba(244,63,94,0.3);">
+                <div class="panel-header">
+                    <div class="panel-title" style="color: var(--accent-rose);">
+                        <span>⚠️</span> Danger Zone
+                    </div>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+                    Permanently wipe all IndexedDB records, profiles, and encrypted files from this device.
+                </p>
+                <button id="btnNuclearReset" class="btn btn-danger btn-sm">
+                    🗑️ Nuclear Factory Reset (Wipe All Vault Data)
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         MODALS & DIALOGS
+         ========================================== -->
+
+    <!-- 1. Onboarding / Master Admin First-Launch Setup Modal -->
+    <div id="modalOnboarding" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏛️ Initialize My Vault v1.0</div>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                    Welcome to your lifetime family chronicle. Create your Master Administrator ID and secure PIN to initialize the zero-knowledge encrypted database.
+                </p>
+
+                <div class="form-group">
+                    <label class="form-label">Vault Setup Mode</label>
+                    <select id="setupModeSelect" class="form-select">
+                        <option value="new" selected>✨ Create New Standalone Family Vault (Fresh Unique ID)</option>
+                        <option value="pair">🔗 Pair with Existing Family Vault ID (Sync between matching APKs)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="setupPairIdGroup" style="display: none;">
+                    <label class="form-label">Existing Vault Cluster ID (e.g. HV-XXXX-XXXX-XXXX-XXXX)</label>
+                    <input type="text" id="setupPairIdInput" class="form-input" placeholder="Paste Existing Family Vault Cluster ID">
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
+                        Strict Protection: Only backups generated with this exact Vault ID will be accepted for restore.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Master Admin ID</label>
+                    <input type="text" id="setupAdminId" class="form-input" placeholder="e.g. admin or your name" value="admin">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Admin Display Name</label>
+                    <input type="text" id="setupAdminName" class="form-input" placeholder="e.g. Dad / Family Head" value="Master Admin">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Master Login PIN / Passphrase (Min 4 chars)</label>
+                    <input type="password" id="setupAdminPin" class="form-input" placeholder="Enter secure PIN" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm Master PIN</label>
+                    <input type="password" id="setupAdminPinConfirm" class="form-input" placeholder="Re-enter secure PIN" autocomplete="off">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCompleteSetup" class="btn btn-primary" style="width: 100%;">
+                    🔒 Initialize Encrypted Vault
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. PIN Login / Session Unlock Modal -->
+    <div id="modalLogin" class="modal-overlay">
+        <div class="modal-content" style="max-width: 380px;">
+            <div class="modal-header">
+                <div class="modal-title">🔒 Unlock My Vault</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Select User Profile</label>
+                    <select id="loginUserSelect" class="form-select">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Enter PIN / Passphrase</label>
+                    <input type="password" id="loginPinInput" class="form-input" placeholder="Enter PIN" autocomplete="off">
+                </div>
+
+                <div id="loginErrorMessage" style="font-size: 0.8rem; color: var(--accent-rose); display: none; margin-top: 0.5rem;">
+                    Incorrect PIN. Please try again.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnLoginSubmit" class="btn btn-primary" style="width: 100%;">
+                    Unlock Session
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Add Event / Diary Entry Modal -->
+    <div id="modalAddEvent" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="eventModalTitle">➕ Log Life Milestone or Diary</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Event Headline / Title</label>
+                    <input type="text" id="evTitle" class="form-input" placeholder="e.g. Baby's First Steps or Rent Agreement Signed">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" id="evDate" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="evCategory" class="form-select">
+                            <option value="milestone">🌟 Life Milestone</option>
+                            <option value="health">💉 Pediatric Health & Vaccine</option>
+                            <option value="education">🎓 Education & School</option>
+                            <option value="family">👨‍👩‍👧 Family & Celebrations</option>
+                            <option value="diary">📖 Personal Diary Entry</option>
+                            <option value="legal">⚖️ Official & Legal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Importance</label>
+                    <select id="evImportance" class="form-select">
+                        <option value="vital">🔥 Vital / Historic Milestone</option>
+                        <option value="major" selected>⭐ Major Life Event</option>
+                        <option value="regular">📝 Regular Note</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Event Details / Private Journal Entry</label>
+                    <textarea id="evDescription" class="form-textarea" rows="4" placeholder="Write full details, memories, or private notes here..."></textarea>
+                </div>
+
+                <div class="toggle-wrapper">
+                    <div>
+                        <div style="font-size: 0.85rem; font-weight: 600;">Private / Masked Entry</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Mask content behind blur curtain until eye icon is clicked</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="evIsPrivate">
+                        <span class="slider-round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnSaveEvent" class="btn btn-primary">Save to Chronicle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Add Document Modal -->
+    <div id="modalAddDoc" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📄 Upload Document to Vault</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                        <label class="form-label" style="margin-bottom: 0;">Target Compartment / Folder</label>
+                        <span id="docFolderAutoBadge" style="display: none; font-size: 0.7rem; background: var(--accent-light); color: var(--accent); padding: 1px 7px; border-radius: var(--radius-xs); font-weight: 800; border: 1px solid var(--accent-badge-border);">
+                            ✨ AUTO-SELECTED
+                        </span>
+                    </div>
+                    <select id="docFolderSelect" class="form-select">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Document Title</label>
+                    <input type="text" id="docTitle" class="form-input" placeholder="e.g. Aadhaar Card, Passport, House Rent Agreement" autocomplete="off">
+                    <!-- Live Suggestions & Auto-Detection Status -->
+                    <div id="docFolderSuggestionNotice" style="display: none; margin-top: 6px; padding: 6px 10px; background: #fff5f5; border: 1px solid var(--accent-badge-border); border-radius: var(--radius-xs); font-size: 0.78rem; color: var(--accent); font-weight: 700; align-items: center; justify-content: space-between;">
+                        <span id="docFolderSuggestionText">💡 Auto-selected folder</span>
+                    </div>
+                    <!-- Live "Already Stored" Alert -->
+                    <div id="docAlreadyPresentContainer" style="display: none; margin-top: 6px; padding: 8px 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: var(--radius-xs); font-size: 0.78rem;">
+                        <div style="font-weight: 800; color: var(--text-main); margin-bottom: 4px;">📂 Already Present in Vault:</div>
+                        <div id="docAlreadyPresentList"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Family Member Tag</label>
+                    <select id="docFamilyMemberSelect" class="form-select">
+                        <option value="All Family" selected>👨‍👩‍👧 All Family / General</option>
+                        <option value="Grandfather">👴 Grandfather</option>
+                        <option value="Grandmother">👵 Grandmother</option>
+                        <option value="Father">👨 Father</option>
+                        <option value="Mother">👩 Mother</option>
+                        <option value="Child">👧 Child</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select File (PDF, PNG, JPG, Document Scans)</label>
+                    <input type="file" id="docFileInput" class="form-input" accept=".pdf,image/*,.doc,.docx">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Expiry Date (Optional — for countdown alerts)</label>
+                    <input type="date" id="docExpiryDate" class="form-input">
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
+                        Set an expiry date for rental agreements, passport renewals, insurance policies, or warranties.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Notes / Keywords</label>
+                    <input type="text" id="docNotes" class="form-input" placeholder="e.g. Registered with sub-registrar, Deposit Rs. 1,00,000">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnSaveDoc" class="btn btn-primary">Encrypt & Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Add Folder Modal -->
+    <div id="modalAddFolder" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📁 Create Vault Folder</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Folder Name</label>
+                    <input type="text" id="folderNameInput" class="form-input" placeholder="e.g. Property & Land Deeds">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 80px 1fr; gap: 0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label">Icon</label>
+                        <input type="text" id="folderIconInput" class="form-input" value="📁" maxlength="2" style="text-align: center;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="folderCategorySelect" class="form-select">
+                            <option value="official">🏛️ Official / Legal</option>
+                            <option value="financial">💰 Financial / Tax</option>
+                            <option value="medical">💉 Medical / Health</option>
+                            <option value="education">🎓 Education</option>
+                            <option value="personal">🔒 Personal Private</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="toggle-wrapper" style="border-top: 1px solid var(--border-color); margin-top: 1rem; padding-top: 1rem;">
+                    <div>
+                        <div style="font-size: 0.85rem; font-weight: 600;">Custom Folder Password Protection</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">AES-256-GCM encryption with independent PIN</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="folderPasswordToggle">
+                        <span class="slider-round"></span>
+                    </label>
+                </div>
+
+                <div id="folderPasswordContainer" style="display: none; margin-top: 0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label">Folder-Specific Password</label>
+                        <input type="password" id="folderPasswordInput" class="form-input" placeholder="Enter folder password" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnCreateFolder" class="btn btn-primary">Create Folder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Unlock Protected Folder Modal -->
+    <div id="modalUnlockFolder" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <div class="modal-title">🔒 Unlock Secure Folder</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="unlockFolderDesc" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    This folder is protected with AES-256-GCM encryption. Enter the folder password to unlock.
+                </p>
+
+                <div class="form-group">
+                    <label class="form-label">Folder Password</label>
+                    <input type="password" id="unlockFolderPasswordInput" class="form-input" placeholder="Enter password" autocomplete="off">
+                </div>
+
+                <div id="unlockFolderError" style="font-size: 0.8rem; color: var(--accent-rose); display: none;">
+                    Incorrect password.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnSubmitUnlockFolder" class="btn btn-primary">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Add Birthday Growth Portrait Modal -->
+    <div id="modalAddGrowth" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📸 Add Birthday Growth Portrait</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 100px; gap: 0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label">Child Name</label>
+                        <input type="text" id="growthChildName" class="form-input" placeholder="e.g. Ananya" value="Child">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Age (Years)</label>
+                        <input type="number" id="growthAgeInput" class="form-input" min="0" max="100" value="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Birthday / Photo Date</label>
+                    <input type="date" id="growthDateInput" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Birthday Portrait Photo</label>
+                    <input type="file" id="growthFileInput" class="form-input" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Milestone Notes (Height, Weight, First Words, Hobbies)</label>
+                    <textarea id="growthNotesInput" class="form-textarea" rows="3" placeholder="e.g. Height: 85 cm, Weight: 12 kg. Loves playing with colored blocks!"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnSaveGrowth" class="btn btn-primary">Save to Timelapse</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Add User Profile Modal (PC Model: Admin / Co-Admin / Standard / Viewer) -->
+    <div id="modalAddUser" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">👥 Add Family User Profile (PC Model)</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">User ID (Unique username)</label>
+                    <input type="text" id="newUserId" class="form-input" placeholder="e.g. spouse or child_name">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Display Name</label>
+                    <input type="text" id="newUserDisplayName" class="form-input" placeholder="e.g. Mom, Dad, Priya">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">User Role</label>
+                    <select id="newUserRoleSelect" class="form-select">
+                        <option value="co-admin">⭐ Equal Rights (Co-Admin) — Full Administrative Parity</option>
+                        <option value="standard" selected>👤 Standard Family Contributor — Add Milestones & Photos</option>
+                        <option value="viewer">👁️ Restricted Viewer — Read-Only Family Memories</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">User PIN / Passphrase (Min 4 chars)</label>
+                    <input type="password" id="newUserPin" class="form-input" placeholder="Create PIN for this user" autocomplete="off">
+                </div>
+
+                <!-- Granular Permissions (Visible for Standard User) -->
+                <div id="granularPermissionsContainer" style="background: var(--bg-tertiary); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-top: 1rem;">
+                    <div style="font-size: 0.82rem; font-weight: 700; margin-bottom: 0.5rem;">Custom Granular Permissions:</div>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; margin-bottom: 0.4rem;">
+                        <input type="checkbox" id="permCanAddEvents" checked> Can Add Life Events & Diary
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; margin-bottom: 0.4rem;">
+                        <input type="checkbox" id="permCanAddGrowth" checked> Can Upload Growth Photos
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; margin-bottom: 0.4rem;">
+                        <input type="checkbox" id="permCanViewConfidential"> Can View Confidential Folders
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem;">
+                        <input type="checkbox" id="permCanAccessHouseLogs"> Can Access House Logs Locker
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnSaveUser" class="btn btn-primary">Create User Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. In-App Document Lightbox Viewer Modal -->
+    <div id="modalDocViewer" class="modal-overlay">
+        <div class="modal-content viewer-modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="viewerDocTitle">📄 Document Viewer</div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button id="btnDownloadCurrentDoc" class="btn btn-secondary btn-sm">💾 Download</button>
+                    <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+                </div>
+            </div>
+            <div class="modal-body viewer-body" id="viewerContainer">
+                <!-- Injected dynamically: iframe for PDF or img for photo -->
+            </div>
+        </div>
+    <!-- 10. Add Medical Visit & Schedule Next Modal -->
+    <div id="modalAddMedical" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🩺 Record Doctor Visit & Schedule Next</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label">Family Member</label>
+                        <select id="medFamilyMemberSelect" class="form-select">
+                            <option value="Grandfather">👴 Grandfather</option>
+                            <option value="Grandmother">👵 Grandmother</option>
+                            <option value="Father">👨 Father</option>
+                            <option value="Mother">👩 Mother</option>
+                            <option value="Child" selected>👧 Child</option>
+                            <option value="All Family">👨‍👩‍👧 All Family</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Speciality</label>
+                        <select id="medSpecialitySelect" class="form-select">
+                            <option value="Pediatric">👶 Pediatric / Child</option>
+                            <option value="General">🩺 General Physician</option>
+                            <option value="Cardiology">❤️ Cardiology / Heart</option>
+                            <option value="Dental">🦷 Dental</option>
+                            <option value="Orthopedic">🦴 Orthopedic / Bone</option>
+                            <option value="Vaccination">💉 Vaccination</option>
+                            <option value="Eye / ENT">👁️ Eye / ENT</option>
+                            <option value="Other">📋 Other Specialist</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label">Doctor Name</label>
+                        <input type="text" id="medDoctorName" class="form-input" list="medDoctorSuggestions" placeholder="e.g. Dr. Rajesh Sharma" autocomplete="off">
+                        <datalist id="medDoctorSuggestions"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Clinic / Hospital</label>
+                        <input type="text" id="medHospital" class="form-input" list="medHospitalSuggestions" placeholder="e.g. Apollo Hospital or City Clinic" autocomplete="off">
+                        <datalist id="medHospitalSuggestions"></datalist>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Visit Date (Last Medical Visit)</label>
+                    <input type="date" id="medVisitDate" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Symptoms, Diagnosis & Treatment</label>
+                    <textarea id="medDiagnosis" class="form-textarea" rows="3" placeholder="e.g. Mild fever and cough. Prescribed Amoxicillin 250mg twice daily for 5 days."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Attach Prescription / Lab Report (Scans, PDFs, Images)</label>
+                    <input type="file" id="medPrescriptionFileInput" class="form-input" accept=".pdf,image/*">
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
+                        File will be automatically stored securely in the Pediatric / Medical Document Vault folder.
+                    </div>
+                </div>
+
+                <!-- Custom Follow-Up Scheduler -->
+                <div style="background: var(--bg-tertiary); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-highlight); margin-top: 0.75rem;">
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.5rem;">
+                        ⏳ Schedule Next Medical Appointment / Follow-Up Checkup
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div class="form-group" style="margin-bottom: 0.4rem;">
+                            <label class="form-label">Next Visit Date</label>
+                            <input type="date" id="medNextVisitDate" class="form-input">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0.4rem;">
+                            <label class="form-label">Follow-up Reason</label>
+                            <input type="text" id="medNextReason" class="form-input" placeholder="e.g. Vaccine booster / BP review">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 0.75rem;">
+                    <label class="form-label">Consultation Fee / Cost (Optional)</label>
+                    <input type="text" id="medCost" class="form-input" placeholder="e.g. ₹800">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnSaveMedicalVisit" class="btn btn-primary">Save Medical Record & Schedule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Cross-App Search Results Floating Modal -->
+    <div id="modalSearchResults" class="search-results-modal">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <div style="font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+                <span>🔍</span> Search Results for <span id="searchQueryLabel" style="color: var(--accent-cyan);">""</span>
+            </div>
+            <button class="btn-icon" onclick="closeSearchModal();" style="width: 28px; height: 28px;">✕</button>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="search-filter-pills" id="searchFilterPills">
+            <button class="search-pill active" data-type="all">All Items</button>
+            <button class="search-pill" data-type="document">📄 Documents & IDs</button>
+            <button class="search-pill" data-type="medical">🩺 Medical Visits</button>
+            <button class="search-pill" data-type="event">🌟 Milestones & Diary</button>
+            <button class="search-pill" data-type="growth">🌱 Growth Photos</button>
+        </div>
+
+        <div id="searchResultsContainer">
+            <!-- Results populated dynamically -->
+        </div>
+    </div>
+
+    <!-- 12. Change PIN Modal (replaces prompt() — Android WebView safe) -->
+    <div id="modalChangePin" class="modal-overlay">
+        <div class="modal-content" style="max-width: 380px;">
+            <div class="modal-header">
+                <div class="modal-title">🔑 Change My PIN</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Current PIN</label>
+                    <input type="password" id="changePinCurrent" class="form-input" placeholder="Enter your current PIN" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New PIN (min 4 chars)</label>
+                    <input type="password" id="changePinNew" class="form-input" placeholder="Enter new PIN" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New PIN</label>
+                    <input type="password" id="changePinConfirm" class="form-input" placeholder="Re-enter new PIN" autocomplete="off">
+                </div>
+                <div id="changePinError" style="font-size:0.8rem;color:var(--accent-rose);display:none;margin-top:0.5rem;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnChangePinConfirm" class="btn btn-primary">🔒 Update PIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 13. Export Vault Passphrase Modal (replaces prompt()) -->
+    <div id="modalExportPassphrase" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <div class="modal-title">📥 Create Backup Passphrase</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:1rem;">
+                    Your entire vault will be encrypted with this passphrase using AES-256-GCM. <strong>You must remember this passphrase to restore.</strong>
+                </p>
+                <div class="form-group">
+                    <label class="form-label">Backup Passphrase (min 6 chars)</label>
+                    <input type="password" id="exportPassphraseInput" class="form-input" placeholder="Enter strong passphrase" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Passphrase</label>
+                    <input type="password" id="exportPassphraseConfirm" class="form-input" placeholder="Re-enter passphrase" autocomplete="off">
+                </div>
+                <div id="exportPassphraseError" style="font-size:0.8rem;color:var(--accent-rose);display:none;margin-top:0.5rem;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnExportVaultConfirm" class="btn btn-primary">🔐 Encrypt &amp; Export</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 14. Import Vault Passphrase Modal (replaces prompt()) -->
+    <div id="modalImportPassphrase" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <div class="modal-title">📤 Restore from Backup</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:1rem;">
+                    Enter the passphrase used when this .vault archive was created to decrypt and restore.
+                </p>
+                <div class="form-group">
+                    <label class="form-label">Backup Passphrase</label>
+                    <input type="password" id="importPassphraseInput" class="form-input" placeholder="Enter original backup passphrase" autocomplete="off">
+                </div>
+                <div id="importPassphraseError" style="font-size:0.8rem;color:var(--accent-rose);display:none;margin-top:0.5rem;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnImportVaultConfirm" class="btn btn-primary">🔓 Decrypt &amp; Restore</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 15. Admin Reset User PIN Modal (replaces prompt()) -->
+    <div id="modalAdminResetPin" class="modal-overlay">
+        <div class="modal-content" style="max-width: 380px;">
+            <div class="modal-header">
+                <div class="modal-title">🔑 Admin: Reset User PIN</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="adminResetPinLabel" style="font-size:0.83rem;color:var(--text-muted);margin-bottom:1rem;"></p>
+                <div class="form-group">
+                    <label class="form-label">New PIN (min 4 chars)</label>
+                    <input type="password" id="adminResetPinNew" class="form-input" placeholder="Enter new PIN for user" autocomplete="off">
+                </div>
+                <div id="adminResetPinError" style="font-size:0.8rem;color:var(--accent-rose);display:none;margin-top:0.5rem;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel</button>
+                <button id="btnAdminResetPinConfirm" class="btn btn-primary">🔒 Reset PIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 16. Nuclear Factory Reset Confirmation Modal (replaces confirm() + prompt()) -->
+    <div id="modalFactoryReset" class="modal-overlay">
+        <div class="modal-content" style="max-width: 420px; border: 2px solid var(--accent-rose);">
+            <div class="modal-header" style="background: rgba(244,63,94,0.08);">
+                <div class="modal-title" style="color: var(--accent-rose);">⚠️ Nuclear Factory Reset</div>
+                <button class="btn-icon modal-close" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.88rem;color:var(--accent-rose);font-weight:700;margin-bottom:0.75rem;">
+                    DANGER: This will PERMANENTLY delete ALL documents, photos, events, medical records, and user profiles from this device. This action cannot be undone.
+                </p>
+                <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">
+                    To confirm, type <strong style="color:var(--accent-rose);">WIPE VAULT</strong> in the box below:
+                </p>
+                <div class="form-group">
+                    <input type="text" id="factoryResetConfirmInput" class="form-input" placeholder='Type "WIPE VAULT" exactly' autocomplete="off" style="border-color: var(--accent-rose);">
+                </div>
+                <div id="factoryResetError" style="font-size:0.8rem;color:var(--accent-rose);display:none;margin-top:0.5rem;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAllModals();">Cancel — Keep My Data</button>
+                <button id="btnFactoryResetConfirm" class="btn btn-danger">🗑️ WIPE ALL DATA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crypto Loading Spinner Overlay -->
+    <div id="cryptoLoadingOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:1rem;">
+        <div style="width:52px;height:52px;border:4px solid rgba(255,255,255,0.15);border-top-color:#dc2626;border-radius:50%;animation:spinnerAnim 0.8s linear infinite;"></div>
+        <div id="cryptoLoadingLabel" style="color:#fff;font-size:0.9rem;font-weight:600;letter-spacing:0.02em;">Securing with AES-256…</div>
+    </div>
+    <style>
+        @keyframes spinnerAnim { to { transform: rotate(360deg); } }
+        #cryptoLoadingOverlay { display: none; }
+        #cryptoLoadingOverlay.active { display: flex; }
+    </style>
+
+    <!-- Scripts -->
+    <script src="crypto.js?v=2.1"></script>
+    <script src="storage.js?v=2.1"></script>
+    <script src="app.js?v=2.1"></script>
+</body>
+</html>

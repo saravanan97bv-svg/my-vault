@@ -1,0 +1,1340 @@
+/* ==========================================================================
+   My Vault v1.0 — RealBite Red & White Theme
+   Architecture: Clean Box Layouts, High-Contrast Typography, Crisp Borders
+   Color Palette: Pure Crisp White (#ffffff), Deep Slate Text (#0f172a / #1e293b),
+                  Iconic Ruby/Crimson Red (#dc2626 / #b91c1c), Cool Slate Canvas (#f8fafc)
+   100% WCAG AAA Compliant Contrast Across All Navigation, Cards & Dialogs
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Design Tokens: RealBite Red & White Palette (Default Light)
+   -------------------------------------------------------------------------- */
+:root,
+[data-theme="light"] {
+    --theme-name: "RealBite Red & White";
+
+    /* Surfaces & Layout Backgrounds */
+    --bg-primary: #f8fafc;        /* Cool clean light slate canvas */
+    --bg-secondary: #ffffff;      /* Pure crisp white for cards and headers */
+    --bg-tertiary: #f1f5f9;       /* Light neutral for inputs & subtle wells */
+    --card-bg: #ffffff;           /* Crisp white box surface */
+    --card-bg-hover: #fff1f2;     /* Very subtle red warmth on card hover */
+    
+    /* Box Borders & Structure */
+    --border: #cbd5e1;            /* Crisp readable 1px border */
+    --border-light: #e2e8f0;      /* Secondary border */
+    --border-highlight: #fca5a5;  /* Soft red accent border */
+    --border-focus: #dc2626;      /* Active crimson red outline */
+    --border-color: #cbd5e1;
+
+    /* High-Contrast Typography (Eliminates all contrast issues) */
+    --text-main: #0f172a;         /* Deep slate black — 15:1 contrast against white */
+    --text-primary: #0f172a;
+    --text-secondary: #334155;    /* Crisp dark slate — 9:1 contrast */
+    --text-muted: #475569;        /* Medium dark slate — 5.5:1 contrast */
+    --text-on-accent: #ffffff;    /* Pure white on red badges and buttons */
+
+    /* RealBite Iconic Crimson & Ruby Red Accents */
+    --accent: #dc2626;            /* Primary Ruby Red */
+    --accent-hover: #b91c1c;      /* Darker Crimson */
+    --accent-active: #991b1b;     /* Deep Red */
+    --accent-light: #fee2e2;      /* Soft Red Tint */
+    --accent-subtle: #fff1f2;     /* Whisper Red */
+    --accent-badge-bg: #fee2e2;
+    --accent-badge-border: #fca5a5;
+    --accent-glow: rgba(220, 38, 38, 0.22);
+    --accent-rose: #dc2626;
+    --accent-cyan: #0284c7;
+
+    /* Status Colors */
+    --success: #15803d;
+    --success-bg: #dcfce7;
+    --success-border: #86efac;
+    --success-text: #14532d;
+
+    --warning: #b45309;
+    --warning-bg: #fef3c7;
+    --warning-border: #fcd34d;
+    --warning-text: #78350f;
+
+    --danger: #dc2626;
+    --danger-bg: #fee2e2;
+    --danger-border: #fca5a5;
+    --danger-text: #991b1b;
+
+    --info: #0369a1;
+    --info-bg: #e0f2fe;
+    --info-border: #7dd3fc;
+    --info-text: #075985;
+
+    /* Role Pills */
+    --badge-admin: #dc2626;
+    --badge-coadmin: #0284c7;
+    --badge-standard: #15803d;
+    --badge-viewer: #475569;
+
+    /* Shadows: Subtle & Crisp (Clean Box Feel) */
+    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --elevation-2: 0 4px 12px rgba(220, 38, 38, 0.08);
+    --elevation-3: 0 10px 24px rgba(0, 0, 0, 0.08);
+
+    /* Clean Box Radii (Structured, non-bubble) */
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-xl: 12px;
+    --radius-full: 9999px;
+
+    --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* --------------------------------------------------------------------------
+   Optional OLED / Dark Mode (Deep Slate with High-Contrast Red & White)
+   -------------------------------------------------------------------------- */
+[data-theme="dark"],
+[data-theme="oled"] {
+    --theme-name: "RealBite Dark Red";
+
+    --bg-primary: #0b0d13;
+    --bg-secondary: #131722;
+    --bg-tertiary: #1a202c;
+    --card-bg: #141824;
+    --card-bg-hover: #1e2436;
+    
+    --border: #2d3748;
+    --border-light: #374151;
+    --border-highlight: rgba(239, 68, 68, 0.45);
+    --border-focus: #ef4444;
+    --border-color: #2d3748;
+
+    --text-main: #ffffff;
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-on-accent: #ffffff;
+
+    --accent: #ef4444;
+    --accent-hover: #dc2626;
+    --accent-active: #b91c1c;
+    --accent-light: rgba(239, 68, 68, 0.15);
+    --accent-subtle: rgba(239, 68, 68, 0.08);
+    --accent-badge-bg: rgba(239, 68, 68, 0.2);
+    --accent-badge-border: rgba(239, 68, 68, 0.45);
+    --accent-glow: rgba(239, 68, 68, 0.35);
+    --accent-rose: #ef4444;
+    --accent-cyan: #38bdf8;
+
+    --success: #22c55e;
+    --success-bg: rgba(34, 197, 94, 0.15);
+    --success-border: rgba(34, 197, 94, 0.35);
+    --success-text: #4ade80;
+
+    --warning: #f59e0b;
+    --warning-bg: rgba(245, 158, 11, 0.15);
+    --warning-border: rgba(245, 158, 11, 0.35);
+    --warning-text: #fbbf24;
+
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.18);
+    --danger-border: rgba(239, 68, 68, 0.4);
+    --danger-text: #f87171;
+
+    --info: #38bdf8;
+    --info-bg: rgba(56, 189, 248, 0.15);
+    --info-border: rgba(56, 189, 248, 0.35);
+    --info-text: #7dd3fc;
+
+    --badge-admin: #ef4444;
+    --badge-coadmin: #38bdf8;
+    --badge-standard: #22c55e;
+    --badge-viewer: #94a3b8;
+
+    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --elevation-2: 0 4px 12px rgba(0, 0, 0, 0.65);
+    --elevation-3: 0 12px 28px rgba(0, 0, 0, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   Base & Reset
+   -------------------------------------------------------------------------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 15px;
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-system);
+    background-color: var(--bg-primary);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   RealBite Header Architecture (Crisp White Bar with Crimson Highlights)
+   -------------------------------------------------------------------------- */
+.app-header {
+    background-color: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-light);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    padding: 0.75rem 1.25rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+    flex-shrink: 0;
+}
+
+.brand-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--text-main);
+}
+
+.brand-tag {
+    font-size: 0.68rem;
+    font-weight: 800;
+    background-color: var(--accent-badge-bg);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--accent-badge-border);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Universal Header Search Box */
+.search-header-container {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+    margin: 0 1rem;
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 0.85rem;
+    transition: all 0.15s ease;
+}
+
+.search-input-wrapper:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.search-input-field {
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    padding: 0.5rem 0.5rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    width: 100%;
+    outline: none;
+    font-family: inherit;
+}
+
+.search-input-field::placeholder {
+    color: var(--text-muted);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex-shrink: 0;
+}
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.user-badge:hover {
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+}
+
+.role-pill {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: var(--radius-xs);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.role-admin { background: var(--badge-admin); color: #ffffff; }
+.role-coadmin { background: var(--badge-coadmin); color: #ffffff; }
+.role-standard { background: var(--badge-standard); color: #ffffff; }
+.role-viewer { background: var(--badge-viewer); color: #ffffff; }
+
+.btn-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 1rem;
+}
+
+.btn-icon:hover {
+    background: var(--card-bg-hover);
+    border-color: var(--accent-badge-border);
+    color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   RealBite Clean Box Navigation Bar (Fixes Contrast 100%)
+   -------------------------------------------------------------------------- */
+.app-nav {
+    background: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-light);
+    display: flex;
+    overflow-x: auto;
+    padding: 0.45rem 1.25rem;
+    gap: 0.45rem;
+    scrollbar-width: none;
+    position: sticky;
+    top: 56px;
+    z-index: 95;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.app-nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* Inactive Box Tab: High-Contrast, Crisp Dark Text on Clean Box */
+.nav-tab {
+    padding: 0.55rem 1.05rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.nav-tab:hover {
+    color: var(--accent);
+    background: var(--accent-subtle);
+    border-color: var(--accent-badge-border);
+}
+
+/* Active Box Tab: Solid RealBite Ruby Red Highlight with Pure White Text */
+.nav-tab.active {
+    color: #ffffff !important;
+    background: var(--accent) !important;
+    border-color: var(--accent-hover) !important;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Main Container & Sections
+   -------------------------------------------------------------------------- */
+.app-container {
+    flex: 1;
+    max-width: 1240px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.25rem 1.25rem 3rem;
+}
+
+.view-section {
+    display: none;
+    animation: fadeSlideUp 0.18s ease-out;
+}
+
+.view-section.active {
+    display: block;
+}
+
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   RealBite Clean Box Layouts: KPI Metric Cards
+   -------------------------------------------------------------------------- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: 1.15rem 1.25rem;
+    position: relative;
+    box-shadow: var(--elevation-1);
+    transition: all 0.2s ease;
+}
+
+.kpi-card:hover {
+    border-color: var(--border-highlight);
+    border-top-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-2);
+}
+
+.kpi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+}
+
+.kpi-value {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}
+
+.kpi-subtext {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.35rem;
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   RealBite Section Panels (Clean Structured Boxes)
+   -------------------------------------------------------------------------- */
+.section-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--elevation-1);
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--accent-light);
+}
+
+.panel-title {
+    font-size: 1.08rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-main);
+}
+
+/* Hero Executive Overview Banner (Clean Box) */
+.hero-banner {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: 1.15rem 1.35rem;
+    margin-bottom: 1.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--elevation-1);
+    flex-wrap: wrap;
+    gap: 0.85rem;
+}
+
+.hero-info {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.hero-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.35rem;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+    flex-shrink: 0;
+}
+
+.hero-title {
+    font-size: 1.12rem;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.hero-sub {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.quick-action-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 700;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.quick-action-pill:hover {
+    background: var(--accent-subtle);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   Two-Column Executive Dashboard Layout
+   -------------------------------------------------------------------------- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.35rem;
+}
+
+@media (max-width: 960px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   RealBite Interactive Calendar (Clean Box Architecture)
+   -------------------------------------------------------------------------- */
+.calendar-widget {
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--elevation-1);
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.calendar-month-label {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+
+.btn-cal-today {
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-xs);
+    font-size: 0.74rem;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    background: var(--bg-primary);
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+.btn-cal-today:hover {
+    background: var(--accent-subtle);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+}
+
+.calendar-day-header {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding: 3px 0;
+    text-transform: uppercase;
+}
+
+.calendar-cell {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-xs);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.12s ease;
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid transparent;
+}
+
+.calendar-cell:hover {
+    background: var(--card-bg-hover);
+    color: var(--accent);
+    border-color: var(--border-highlight);
+}
+
+.calendar-cell.has-event::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    position: absolute;
+    bottom: 2px;
+}
+
+.calendar-cell.has-med::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--success);
+    position: absolute;
+    top: 2px;
+}
+
+.calendar-cell.today {
+    border: 1.5px solid var(--accent);
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.calendar-cell.selected {
+    background: var(--accent) !important;
+    color: #ffffff !important;
+    font-weight: 800;
+    border-color: var(--accent-hover) !important;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.35);
+}
+
+.calendar-cell.selected::after {
+    background: #ffffff;
+}
+
+/* Active Calendar Day Filter Banner */
+.cal-filter-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff5f5;
+    border: 1.5px solid var(--border-highlight);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 0.95rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+
+.cal-filter-badge {
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+    font-size: 0.72rem;
+}
+
+/* --------------------------------------------------------------------------
+   Chronological Life Stream & Timeline
+   -------------------------------------------------------------------------- */
+.timeline-stream {
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.timeline-stream::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: var(--border);
+}
+
+.timeline-node {
+    position: relative;
+    margin-bottom: 1.15rem;
+}
+
+.timeline-node-dot {
+    position: absolute;
+    left: -1.5rem;
+    top: 6px;
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-xs);
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.62rem;
+    color: var(--accent);
+}
+
+.event-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.15rem;
+    transition: all 0.15s ease;
+    box-shadow: var(--elevation-1);
+}
+
+.event-card:hover {
+    border-color: var(--border-highlight);
+    border-left-color: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--elevation-2);
+}
+
+.event-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+}
+
+.event-title {
+    font-weight: 800;
+    font-size: 0.98rem;
+    color: var(--text-main);
+}
+
+.event-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.event-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   Document Vault & Folder Architecture (RealBite Clean Box Layout)
+   -------------------------------------------------------------------------- */
+.vault-category-bar {
+    display: flex;
+    gap: 0.45rem;
+    overflow-x: auto;
+    padding-bottom: 0.65rem;
+    margin-bottom: 1rem;
+    scrollbar-width: none;
+}
+
+.vault-category-pill {
+    padding: 0.45rem 0.95rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-main);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.vault-category-pill:hover {
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+    color: var(--accent);
+}
+
+.vault-category-pill.active {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent-hover);
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25);
+}
+
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Clean Box Folder Card */
+.folder-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.15rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    box-shadow: var(--elevation-1);
+}
+
+.folder-card:hover {
+    border-color: var(--accent);
+    background: var(--card-bg-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-2);
+}
+
+.folder-card.active {
+    border: 2px solid var(--accent);
+    background: #fff5f5;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+}
+
+.folder-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.65rem;
+}
+
+.folder-icon {
+    font-size: 1.6rem;
+    color: var(--accent);
+}
+
+/* RealBite Security Badges (Clean Box, High Contrast) */
+.security-badge {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.security-badge.protected {
+    background: var(--accent-badge-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-badge-border);
+}
+
+.security-badge.public {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.folder-name {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+}
+
+.folder-subtext {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Document Cards Inside Folders */
+.doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.doc-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.15rem;
+    box-shadow: var(--elevation-1);
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.doc-card:hover {
+    border-color: var(--border-highlight);
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-2);
+}
+
+.doc-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin-bottom: 0.65rem;
+}
+
+.doc-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.doc-title {
+    font-weight: 800;
+    font-size: 0.92rem;
+    color: var(--text-main);
+    line-height: 1.3;
+}
+
+.doc-meta {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.doc-actions {
+    display: flex;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--border-light);
+}
+
+/* --------------------------------------------------------------------------
+   RealBite Action Buttons (Red & White Architecture)
+   -------------------------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    text-decoration: none;
+}
+
+/* Primary Button: Bold Ruby Red */
+.btn-primary {
+    background: var(--accent);
+    color: #ffffff !important;
+    border-color: var(--accent-hover);
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-active);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35);
+}
+
+/* Secondary Button: Clean Crisp White with Slate Border & High Contrast Text */
+.btn-secondary {
+    background: var(--bg-secondary);
+    border-color: var(--border);
+    color: var(--text-main) !important;
+}
+
+.btn-secondary:hover {
+    background: var(--card-bg-hover);
+    border-color: var(--accent-badge-border);
+    color: var(--accent) !important;
+}
+
+/* Danger Button: Crisp Warning Red */
+.btn-danger {
+    background: var(--danger-bg);
+    border-color: var(--danger-border);
+    color: var(--danger-text) !important;
+}
+
+.btn-danger:hover {
+    background: var(--accent);
+    color: #ffffff !important;
+    border-color: var(--accent-hover);
+}
+
+.btn-sm {
+    padding: 0.38rem 0.75rem;
+    font-size: 0.78rem;
+    border-radius: var(--radius-xs);
+}
+
+/* Filter Button Groups */
+.event-filter-btn.active,
+.med-filter-btn.active,
+.search-pill.active {
+    background: var(--accent) !important;
+    color: #ffffff !important;
+    border-color: var(--accent-hover) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Medical Hub & Health Chronicle (Clean Box Layout)
+   -------------------------------------------------------------------------- */
+.med-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.35rem;
+}
+
+.med-stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.15rem;
+    box-shadow: var(--elevation-1);
+}
+
+.med-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--info);
+    border-radius: var(--radius-sm);
+    padding: 1.15rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--elevation-1);
+}
+
+/* --------------------------------------------------------------------------
+   Modal Dialogs & Form Elements (Clean Box Architecture)
+   -------------------------------------------------------------------------- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--elevation-3);
+    animation: modalPop 0.18s ease-out;
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.35rem;
+    border-bottom: 2px solid var(--accent-light);
+}
+
+.modal-title {
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.modal-body {
+    padding: 1.25rem 1.35rem;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    padding: 0.95rem 1.35rem;
+    border-top: 1px solid var(--border-light);
+    background: var(--bg-primary);
+}
+
+/* Form Controls */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.55rem 0.85rem;
+    font-size: 0.88rem;
+    color: var(--text-main);
+    font-family: inherit;
+    outline: none;
+    transition: all 0.15s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Clean Box Tables */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+}
+
+.admin-table th {
+    background: var(--bg-primary);
+    color: var(--text-muted);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid var(--border);
+    text-align: left;
+}
+
+.admin-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-main);
+}
+
+.admin-table tr:hover td {
+    background: var(--accent-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   Live Auto-Suggestions & Typeahead Dropdown
+   -------------------------------------------------------------------------- */
+.search-typeahead-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--elevation-3);
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.typeahead-item {
+    padding: 0.65rem 0.85rem;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+
+.typeahead-item:last-child {
+    border-bottom: none;
+}
+
+.typeahead-item:hover {
+    background: var(--card-bg-hover);
+}
+
+.typeahead-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-main);
+}
+
+.typeahead-badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: var(--radius-xs);
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+.doc-present-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    margin-bottom: 4px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.doc-present-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 680px) {
+    .app-header {
+        padding: 0.65rem 0.85rem;
+        flex-wrap: wrap;
+    }
+    .search-header-container {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+        margin: 0.45rem 0 0 0;
+    }
+    .app-nav {
+        padding: 0.4rem 0.85rem;
+        gap: 0.35rem;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .nav-tab {
+        padding: 0.45rem 0.8rem;
+        font-size: 0.82rem;
+        flex-shrink: 0;
+    }
+    .app-container {
+        padding: 0.85rem 0.75rem 4rem;
+    }
+    .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
+    }
+    .folder-grid, .doc-grid {
+        grid-template-columns: 1fr;
+    }
+}

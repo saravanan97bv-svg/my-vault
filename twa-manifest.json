@@ -1,0 +1,52 @@
+{
+  "packageId": "com.heritagevault.app",
+  "host": "localhost",
+  "name": "My Vault",
+  "launcherName": "My Vault",
+  "display": "standalone",
+  "themeColor": "#dc2626",
+  "themeColorDark": "#1c0a0f",
+  "navigationColor": "#ffffff",
+  "navigationColorDark": "#0f172a",
+  "backgroundColor": "#ffffff",
+  "enableNotifications": false,
+  "startUrl": "/index.html",
+  "iconUrl": "/icon-512.png",
+  "maskableIconUrl": "/icon-maskable-512.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Life Event",
+      "shortName": "Event",
+      "url": "/index.html#shortcut=add-event",
+      "icon": "/icon-192.png"
+    },
+    {
+      "name": "Document Vault",
+      "shortName": "Vault",
+      "url": "/index.html#shortcut=vault",
+      "icon": "/icon-192.png"
+    },
+    {
+      "name": "Medical Hub",
+      "shortName": "Medical",
+      "url": "/index.html#shortcut=medical",
+      "icon": "/icon-192.png"
+    }
+  ],
+  "generatorApp": "pwabuilder",
+  "webManifestUrl": "/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  }
+}
